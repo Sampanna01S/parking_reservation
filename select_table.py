@@ -10,6 +10,7 @@ cursor = connection.cursor()
 
 
 select_stmt = 'SELECT id FROM parking_spot'
+# select_stmt = 'SELECT * FROM reservation WHERE ID=1492461428'
 result = cursor.execute(select_stmt)
 for row in result:
     print row

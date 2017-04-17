@@ -1,6 +1,5 @@
 import sqlite3
 from parking_spot import ParkingSpotModel
-from flask import jsonify
 
 
 class BookedParkingModel():
@@ -17,24 +16,22 @@ class BookedParkingModel():
 
         :param int latitude: The latitude of the place
         :param int longitude: The longitude of the place
-        param int radius: The radius within which we want the parking space to be available
+        :param int radius: The radius within which we want the parking space to be available
         """
         #This will give bookings for lat/long for all spots within the radius
-        result = ParkingSpotModel.get_parking_spot_ids_by_lat_and_long(latitude, longitude, radius)
-        all_parking_ids = []
-        if result:
-            all_parking_ids = result['parking_spots']
+        results = ParkingSpotModel.get_parking_spots_by_lat_and_long(latitude, longitude, radius)
+        all_parking_ids = [result.get('parking_id') for result in results]
+
         connection = sqlite3.connect("data.db")
         cursor = connection.cursor()
 
-        #These will give all paking ids that re booked for the date
-        rows = cursor.execute("SELECT id FROM booked_parking WHERE date = ?",
+        #These will give all parking ids that re booked for the date
+        rows = cursor.execute("SELECT id FROM booked_parking WHERE booked_date = ?",
             (booking_date, )
         )
 
-        all_used_parking = []
-        for row in rows:
-            all_used_parking.append(row[0])
+        all_used_parking = [row[0] for row in rows]
 
         available_spots = list(set(all_parking_ids) - set(all_used_parking))
-        return jsonify({'spots_available': available_spots})
+        spots_available_result = [result for result in results if result.get('parking_id') in available_spots] 
+        return {'spots_available': spots_available_result}

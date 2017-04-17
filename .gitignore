@@ -1,1 +1,5 @@
 venv
+*.pyc
+models/*.pyc
+resources/*.pyc
+data.db

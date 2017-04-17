@@ -12,6 +12,7 @@ class ReservationModel():
 
     @classmethod
     def find_by_cfno(cls, confirmation_num):
+        print '111 {}'.format(confirmation_num)
         connection = sqlite3.connect("data.db")
         cursor = connection.cursor()
         result = cursor.execute("SELECT * FROM reservation WHERE ID=?", (confirmation_num,))
@@ -19,10 +20,10 @@ class ReservationModel():
         return row
 
     @classmethod
-    def update_reservation(cls, confirmation_num, data):
+    def update_reservation(cls, confirmation_num, **data):
         connection = sqlite3.connect("data.db")
         cursor = connection.cursor()
-        UPDATE_TABLE = ("UPDATE reservation parking_id=?, customer_name=?, start_date=?, end_date=? WHERE id=?")
+        UPDATE_TABLE = ("UPDATE reservation SET parking_id=?, customer_name=?, start_date=?, end_date=? WHERE id=?")
         cursor.execute(
             UPDATE_TABLE,
             (data['parking_id'], data['customer_name'], data['start_date'], data['end_date'], confirmation_num)
@@ -39,7 +40,7 @@ class ReservationModel():
         connection.close()
 
     @classmethod
-    def add_reservation(self, cfno, data):
+    def add_reservation(cls, cfno, **data):
         connection = sqlite3.connect("data.db")
         cursor = connection.cursor()
         INSERT_TABLE = (

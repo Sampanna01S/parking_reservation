@@ -1,5 +1,4 @@
 import sqlite3
-from flask import jsonify
 
 
 class ParkingSpotModel():
@@ -57,7 +56,7 @@ class ParkingSpotModel():
             d['latitude'] = row[1]
             d['longitude'] = row[2]
             results.append(d)
-        return {'parking_spots': results}
+        return results
 
     @classmethod
     def get_parking_spot_ids_by_lat_and_long(cls, latitude, longitude, radius):
@@ -86,4 +85,4 @@ class ParkingSpotModel():
         results = []
         for row in rows:
             results.append(row[0])
-        return jsonify({'parking_spots': results})
+        return {'parking_spots': results}
