@@ -29,7 +29,7 @@ class Reservation(Resource):
         if not row:
             return {'message': 'Confirmation number {} not found'.format(confirmation_num)}, 404
 
-        data = Reservation.parser.parser.parse_args()
+        data = Reservation.parser.parse_args()
         try:
             ReservationModel.update_reservation(confirmation_num, **data)
             return {'message': 'Updated reservation successfully'}
