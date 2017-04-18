@@ -22,7 +22,7 @@ The following Rest API's are provided. The code is implemented in python and fla
 
 ## Running Tests
 1. Make sure the app.py is running
-2. Run the reservation_test.py located under tests
+2. Run the tests
    ```nosetests tests```
 
 ##Limitations
