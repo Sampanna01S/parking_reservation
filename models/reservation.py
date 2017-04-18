@@ -1,4 +1,5 @@
 import sqlite3
+from parking_reserved import BookedParkingModel
 
 
 class ReservationModel():
@@ -15,43 +16,70 @@ class ReservationModel():
         print '111 {}'.format(confirmation_num)
         connection = sqlite3.connect("data.db")
         cursor = connection.cursor()
-        result = cursor.execute("SELECT * FROM reservation WHERE ID=?", (confirmation_num,))
-        row = result.fetchone()
-        return row
+        try:
+            result = cursor.execute("SELECT * FROM reservation WHERE ID=?", (confirmation_num,))
+            row = result.fetchone()
+            return row
+        except Exception as e:
+            raise e
+        finally:
+            connection.close()
+        return None
 
     @classmethod
     def update_reservation(cls, confirmation_num, **data):
         connection = sqlite3.connect("data.db")
         cursor = connection.cursor()
-        UPDATE_TABLE = ("UPDATE reservation SET parking_id=?, customer_name=?, start_date=?, end_date=? WHERE id=?")
-        cursor.execute(
-            UPDATE_TABLE,
-            (data['parking_id'], data['customer_name'], data['start_date'], data['end_date'], confirmation_num)
-        )
-        connection.commit()
+        try:
+            UPDATE_TABLE = ("UPDATE reservation SET parking_id=?, customer_name=?, start_date=?, end_date=? WHERE id=?")
+            cursor.execute(
+                UPDATE_TABLE,
+                (data['parking_id'], data['customer_name'], data['start_date'], data['end_date'], confirmation_num)
+            )
+            connection.commit()
+        except Exception as e:
+            raise e
+        finally:
+            connection.close()
         connection.close()
 
     @classmethod
     def delete_reservation(cls, confirmation_num):
         connection = sqlite3.connect("data.db")
         cursor = connection.cursor()
-        cursor.execute("DELETE FROM reservation WHERE id=?", (confirmation_num,))
-        connection.commit()
-        connection.close()
+        try:
+            cursor.execute("DELETE FROM reservation WHERE id=?", (confirmation_num,))
+            cursor.execute("DELETE FROM booked_parking WHERE reservation_id=?", (confirmation_num,))
+            connection.commit()
+        except Exception as e:
+            raise e
+        finally:
+            connection.close()
 
     @classmethod
     def add_reservation(cls, cfno, **data):
         connection = sqlite3.connect("data.db")
         cursor = connection.cursor()
-        INSERT_TABLE = (
-            "INSERT INTO reservation(id, parking_id, customer_name, start_date, end_date)"
-               "VALUES (?,?,?,?,?)"
-        )
-        cursor.execute(
-            INSERT_TABLE,
-            (cfno, data['parking_id'], data['customer_name'], data['start_date'], data['end_date'])
-        )
-        connection.commit()
-        connection.close()
+        try:
+            INSERT_TABLE = (
+                "INSERT INTO reservation(id, parking_id, customer_name, start_date, end_date)"
+                   "VALUES (?,?,?,?,?)"
+            )
+            cursor.execute(
+                INSERT_TABLE,
+                (cfno, data['parking_id'], data['customer_name'], data['start_date'], data['end_date'])
+            )
+
+            ## Right now just adding only the start date. Might need to have all the dates including
+            ## start date and end date
+            cursor.execute(
+                "INSERT INTO booked_parking(parking_id, reservation_id, booked_date) VALUES (?,?,?)",
+                (data['parking_id'], cfno, data['start_date'])
+            )
+            connection.commit()
+        except Exception as e:
+            raise e
+        finally:
+            connection.close()
 
 
