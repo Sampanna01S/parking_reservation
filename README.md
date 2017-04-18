@@ -23,7 +23,7 @@ The following Rest API's are provided. The code is implemented in python and fla
 ## Running Tests
 1. Make sure the app.py is running
 2. Run the reservation_test.py located under tests
-   ```nosetests tests/reservation_test.py```
+   ```nosetests tests```
 
 ##Limitations
 I am currently using sqlite database. However, I realized that  sqlite is not suited for geo operations. The database does not support sine, cosine fuctions. I had to use the workaround of storing the sine/cosine values for latitude and longitude in separate columns in the table. I am just not sure how well this works.
