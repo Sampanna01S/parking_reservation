@@ -1,4 +1,5 @@
 import sqlite3
+from math import sin, cos
 
 
 class ParkingSpotModel():
@@ -38,25 +39,25 @@ class ParkingSpotModel():
         """
 
         #For this task, just ignoring latitude, longitude, radius for now
-        latitude = float(self.latitude)
-        longitude = float(self.longitude)
+        lat = float(self.latitude)
+        lon = float(self.longitude)
         radius = float(self.radius)
-        start_latitude = latitude - radius
-        end_latitude = latitude + radius
-        start_longitude = longitude - radius
-        end_longitude = longitude + radius
+
+        #Used the formula from below website for calculating distance with a radius.
+        #The distance is displayed in kilometers. I don't think this works
+        # https://github.com/sozialhelden/wheelmap-android/wiki/Sqlite,-Distance-calculations
         connection = sqlite3.connect("data.db")
         cursor = connection.cursor()
-        select_stmt = (
-            "SELECT id, (3959 * acos(cos(radians(37)) * cos(radians(lat)) * cos(radians(lng) - radians(-122)) + sin(radians(37)) * sin(radians(lat )))) AS distance"
-            " FROM parking_spot HAVING distance < 25 ORDER BY distance LIMIT 0, 20"
+        select_stmt = ('SELECT id, name, address, latitude, longitude, '
+            '({} * sin_lat + {} * cos_lat *'
+            '({} * sin_lon + {} * cos_lon)) AS "distance"'
+            'FROM parking_spot where distance < {} ORDER BY "distance_acos" DESC'.format(
+                sin(lat), cos(lat), sin(lon), cos(lon), radius
+            )
         )
-#         select_stmt = (
-#             "SELECT * FROM parking_spot"
-#         )
-        rows = cursor.execute(select_stmt, (start_latitude, end_latitude, start_longitude, end_longitude))
+
+        rows = cursor.execute(select_stmt)
         try:
-#             rows = cursor.execute(select_stmt)
             results = []
             for row in rows:
                 d = {}
@@ -73,36 +74,3 @@ class ParkingSpotModel():
             connection.close()
         return None
 
-    def get_parking_spot_ids_by_lat_and_long(self):
-        """
-        Get the parking spot id  given the latitude, longitude and radius
-        """
-        #For this task, just ignoring latitude, longitude, radius for now
-#         latitude = int(self.latitude)
-#         longitude = int(self.longitude)
-#         radius = int(self.radius)
-#         start_latitude = latitude - radius
-#         end_latitude = latitude + radius
-#         start_longitude = longitude - radius
-#         end_longitude = longitude + radius
-        connection = sqlite3.connect("data.db")
-        cursor = connection.cursor()
-#         select_stmt = (
-#             "SELECT id FROM parking_spot WHERE latitude>=? and latitude>=? "
-#             "and longitude>=? and longitude>=?"
-#         )
-#         rows = cursor.execute(select_stmt, (start_latitude, end_latitude, start_longitude, end_longitude))
-        try:
-            select_stmt = (
-                "SELECT id FROM parking_spot"
-            )
-            rows = cursor.execute(select_stmt)
-            results = []
-            for row in rows:
-                results.append(row[0])
-            return {'parking_spots': results}
-        except Exception as e:
-            raise e
-        finally:
-            connection.close()
-        return None

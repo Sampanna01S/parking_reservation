@@ -61,7 +61,7 @@ class AddReservation(Resource):
         cfno = int(time())
         try:
             ReservationModel.add_reservation(cfno, **data)
-            return {'message': 'Added reservation successfully. Confirmation number: {}'.format(cfno)}
+            return {'message': 'Added reservation successfully.', 'confirmation_number': '{}'.format(cfno)}
         except Exception as e:
             print e
             return {'message': 'Adding reservation failed'}, 400

@@ -15,3 +15,6 @@ The following Rest API's are provided. The code is implemented in python and fla
 2. Run the create_table.py to create the required tables. You should notice a ``data.db`` file under the directory
 3. Run the app.py file. This will run the flask application on port 5000
 
+## Running Tests
+1. Make sure the app.py is running
+2. Run the reservation_test.py located under tests

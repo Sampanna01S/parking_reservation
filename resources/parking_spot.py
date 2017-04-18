@@ -8,14 +8,14 @@ class ParkingSpot(Resource):
     Resource for finding available parking space within a radius
     given the longitude and latitude
     """
-    def get(self):
+    def get(self, latitude, longitude, radius):
         """
         Returns all the available spots for the date requested
         given the longitude, latitude and radius
         """
-        latitude = request.args.get('latitude')
-        longitude = request.args.get('longitude')
-        radius = request.args.get('radius')
+#         latitude = request.args.get('latitude')
+#         longitude = request.args.get('longitude')
+#         radius = request.args.get('radius')
         booking_date = request.args.get('date')
 
         # TODO
