@@ -13,7 +13,13 @@ class ReservationModel():
 
     @classmethod
     def find_by_cfno(cls, confirmation_num):
-        print '111 {}'.format(confirmation_num)
+        """
+        Find a reservation given the confirmation number
+
+        :param int confirmation_num: The confirmation number
+
+        :returns : The results from the SQL query
+        """
         connection = sqlite3.connect("data.db")
         cursor = connection.cursor()
         try:
@@ -28,6 +34,11 @@ class ReservationModel():
 
     @classmethod
     def update_reservation(cls, confirmation_num, **data):
+        """
+        Update a existing reservation
+
+        :param int confirmation_num: The confirmation number
+        """
         connection = sqlite3.connect("data.db")
         cursor = connection.cursor()
         try:
@@ -45,6 +56,11 @@ class ReservationModel():
 
     @classmethod
     def delete_reservation(cls, confirmation_num):
+        """
+        Delete a existing reservation
+
+        :param int confirmation_num: The confirmation number
+        """
         connection = sqlite3.connect("data.db")
         cursor = connection.cursor()
         try:
@@ -58,6 +74,11 @@ class ReservationModel():
 
     @classmethod
     def add_reservation(cls, cfno, **data):
+        """
+        Add a new reservation
+
+        :param int confirmation_num: The confirmation number
+        """
         connection = sqlite3.connect("data.db")
         cursor = connection.cursor()
         try:

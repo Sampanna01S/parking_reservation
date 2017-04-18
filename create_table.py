@@ -3,7 +3,8 @@
 # I added this file here for simplicity.
 
 import sqlite3
-from math import sin, cos
+from math import sin, cos, radians
+import time
 
 #sqlite has data in the file
 connection = sqlite3.connect('data.db')
@@ -20,58 +21,56 @@ cursor.execute(create_stmt)
 #Adding random latitude and longitude for the demo
 # Since sqlite3 does not support sin, cos function, I followed the below website suggestion of creating
 # sine and cosine values for latitude and longitude in the table column itself
-#WEBSITE: https://github.com/sozialhelden/wheelmap-android/wiki/Sqlite,-Distance-calculations
-lat = 37.784172
-lon = -122.401558
-insert_statement = ("INSERT INTO parking_spot(id, name, address, latitude, longitude, sin_lat, sin_lon, cos_lat, cos_lon) "
-                   "VALUES(1, 'Awesome Parking', '514 Bryant Street, San Francisco CA', {}, {}, {}, {}, {}, {})".format(lat, lon, sin(lat), sin(lon), cos(lat), cos(lon)))
-cursor.execute(insert_statement)
+#http://stackoverflow.com/questions/3126830/query-to-get-records-based-on-radius-in-sqlite
+parking_info = []
+parking_info.append({
+    "latitude": 37.7811629, "longitude": -122.4052339,
+    "name": "The beacon parking garage", "address": "250 King St, San Francisco, CA 94107"
+})
+parking_info.append({
+    "latitude": 37.7811629, "longitude": -122.4052339,
+    "name": "Holiday Inn civic center", "address": "50 8th St San Francisco CA 94103"
+})
+parking_info.append({
+    "latitude": 37.7811629, "longitude": -122.4052339,
+    "name": "Townsend garage", "address": "153 Townsend St San Francisco CA 94107"
+})
+parking_info.append({
+    "latitude": 37.7811629, "longitude": -122.4052339,
+    "name": "Howard Garage", "address": "75 Howard St San Francisco, CA 94105"
+})
+parking_info.append({
+    "latitude": 37.7811629, "longitude": -122.4052339,
+    "name": "EZ public parking", "address": "333 Jones St San Francisco CA 94102"
+})
+parking_info.append({
+    "latitude": 37.7811629, "longitude": -122.4052339,
+    "name": "Crocker garage", "address": "1045 California St San Francisco CA 94108"
+})
+parking_info.append({"latitude": 37.7811629, "longitude": -122.4052339, "name": "Ellis-O Farrell parking", "address": "123 O Farrell St San Francisco CA 94102"})
 
-lat = 38.784172
-lon = -121.401558
-insert_statement = ("INSERT INTO parking_spot(id, name, address, latitude, longitude, sin_lat, sin_lon, cos_lat, cos_lon) "
-                   "VALUES(2, 'Awesome Parking', '123 Bryant Street, San Francisco CA',  {}, {}, {}, {}, {}, {})".format(lat, lon, sin(lat), sin(lon), cos(lat), cos(lon)))
-cursor.execute(insert_statement)
+INSERT_STATEMENT = (
+    "INSERT INTO parking_spot(id, name, address, latitude, longitude, sin_lat, sin_lon, cos_lat, cos_lon) "
+    "VALUES({}, \"{}\", \"{}\", {}, {}, {}, {}, {}, {})"
+)
 
-lat = 39.784172
-lon = -120.401558
-insert_statement = ("INSERT INTO parking_spot(id, name, address, latitude, longitude, sin_lat, sin_lon, cos_lat, cos_lon) "
-                   "VALUES(3, 'Best Parking', '123 Brannan Street, San Fransisco CA', {}, {}, {}, {}, {}, {})".format(lat, lon, sin(lat), sin(lon), cos(lat), cos(lon)))
-cursor.execute(insert_statement)
-
-lat = 40.784172
-lon = -119.401558
-insert_statement = ("INSERT INTO parking_spot(id, name, address, latitude, longitude, sin_lat, sin_lon, cos_lat, cos_lon) "
-                   "VALUES(4, 'Cheap Parking', '123 Montgomerry Street, San Fransisco CA', {}, {}, {}, {}, {}, {})".format(lat, lon, sin(lat), sin(lon), cos(lat), cos(lon)))
-cursor.execute(insert_statement)
-
-lat = 41.784172
-lon = -118.401558
-insert_statement = ("INSERT INTO parking_spot(id, name, address, latitude, longitude, sin_lat, sin_lon, cos_lat, cos_lon) "
-                   "VALUES(5, 'Johns Parking', '123 Harrison Street, San Fransisco CA',  {}, {}, {}, {}, {}, {})".format(lat, lon, sin(lat), sin(lon), cos(lat), cos(lon)))
-cursor.execute(insert_statement)
-
-lat = 42.784172
-lon = -117.401558
-insert_statement = ("INSERT INTO parking_spot(id, name, address, latitude, longitude, sin_lat, sin_lon, cos_lat, cos_lon) "
-                   "VALUES(6, 'Awesome Parking', '123 Folsom Street, San Fransisco CA',  {}, {}, {}, {}, {}, {})".format(lat, lon, sin(lat), sin(lon), cos(lat), cos(lon)))
-cursor.execute(insert_statement)
-
-lat = 43.784172
-lon = -116.401558
-insert_statement = ("INSERT INTO parking_spot(id, name, address, latitude, longitude, sin_lat, sin_lon, cos_lat, cos_lon) "
-                   "VALUES(7, 'Awesome Parking', '123 Howard Street, San Fransisco CA',  {}, {}, {}, {}, {}, {})".format(lat, lon, sin(lat), sin(lon), cos(lat), cos(lon)))
-cursor.execute(insert_statement)
+for index, data in enumerate(parking_info):
+    lat = data['latitude']
+    lon = data['longitude']
+    statement = INSERT_STATEMENT.format(
+        (index + 1), data['name'], data['address'], lat, lon, sin(radians(lat)), sin(radians(lon)), cos(radians(lat)), cos(radians(lon))
+    )
+    cursor.execute(statement)
 
 #parking_id is the foreign key from TABLE parking_spot(id)
 #reservation_id is the foreign key from TABLE reservation(id)
 create_stmt = 'CREATE TABLE IF NOT EXISTS booked_parking (id INTEGER PRIMARY KEY, parking_id INTEGER, reservation_id INT, booked_date TEXT)'
 cursor.execute(create_stmt)
-insert_stmt = "INSERT INTO booked_parking(parking_id, reservation_id, booked_date) VALUES(1, 1, '04/17/2017')"
+insert_stmt = "INSERT INTO booked_parking(parking_id, reservation_id, booked_date) VALUES(1, 1, \"{}\")".format(time.strftime("%x"))
 cursor.execute(insert_stmt)
-insert_stmt = "INSERT INTO booked_parking(parking_id, reservation_id, booked_date) VALUES(2, 2, '04/17/2017')"
+insert_stmt = "INSERT INTO booked_parking(parking_id, reservation_id, booked_date) VALUES(2, 2, \"{}\")".format(time.strftime("%x"))
 cursor.execute(insert_stmt)
-insert_stmt = "INSERT INTO booked_parking(parking_id, booked_date) VALUES(3, '04/17/2017')"
+insert_stmt = "INSERT INTO booked_parking(parking_id, booked_date) VALUES(3, \"{}\")".format(time.strftime("%x"))
 cursor.execute(insert_stmt)
 
 connection.commit()

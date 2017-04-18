@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_restful import Api
+import logging
 from resources.parking_spot import ParkingSpot
 from resources.reservation import Reservation, AddReservation
 
@@ -11,4 +12,6 @@ api.add_resource(ParkingSpot, '/parking_spots/<string:latitude>/<string:longitud
 
 
 if __name__ == '__main__':
+    logging.basicConfig(filename='myapp.log', level=logging.INFO)
+    logging.info('started parking reservation app')
     app.run(port=5000, debug=True)

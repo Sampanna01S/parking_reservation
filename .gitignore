@@ -3,3 +3,5 @@ venv
 models/*.pyc
 resources/*.pyc
 data.db
+myapp.log
+select_table.py

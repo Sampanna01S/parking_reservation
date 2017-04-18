@@ -19,8 +19,8 @@ class BookedParkingModel():
         :param int radius: The radius within which we want the parking space to be available
         """
         #This will give bookings for lat/long for all spots within the radius
-        parking_model = ParkingSpotModel(latitude, longitude, radius)
-        results = parking_model.get_parking_spots_by_lat_and_long()
+        parking_model = ParkingSpotModel(latitude, longitude)
+        results = parking_model.get_parking_spots_by_lat_and_long(radius)
         all_parking_ids = [result.get('parking_id') for result in results]
 
         connection = sqlite3.connect("data.db")
