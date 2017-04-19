@@ -1,6 +1,6 @@
 # README for parking reservation
 
-This is a parking reservation application for finding available parking spots in a given radius from the specified latitude and lobgitude paramaters.
+This is a parking reservation application for finding available parking spots in a given radius from the specified latitude and longitude parameters.
 
 Assumption: The parking spot is reserved for a day basis and not time slots 
 
