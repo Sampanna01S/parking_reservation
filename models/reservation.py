@@ -2,7 +2,7 @@ import sqlite3
 from parking_reserved import BookedParkingModel
 
 
-class ReservationModel():
+class ReservationModel:
     __tablename__ = 'reservation'
 
     def __init__(self, parking_id, customer_name, start_date, end_date):
@@ -102,5 +102,3 @@ class ReservationModel():
             raise e
         finally:
             connection.close()
-
-

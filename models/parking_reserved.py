@@ -2,7 +2,7 @@ import sqlite3
 from parking_spot import ParkingSpotModel
 
 
-class BookedParkingModel():
+class BookedParkingModel:
     __tablename__ = 'booked_parking'
 
     def __init__(self, parking_id, booked_date):

@@ -2,7 +2,7 @@ import sqlite3
 from math import sin, cos, radians
 
 
-class ParkingSpotModel():
+class ParkingSpotModel:
     __tablename__ = 'parking_spot'
 
     def __init__(self, latitude, longitude):
@@ -47,7 +47,7 @@ class ParkingSpotModel():
 
         #Used a workaround for sqlite since it does not support sin, cos functions
         #as suggested by below website for calculating distance with a radius.
-        #The distance is displayed in kilometers. 
+        #The distance is displayed in kilometers.
         #http://stackoverflow.com/questions/3126830/query-to-get-records-based-on-radius-in-sqlite
         connection = sqlite3.connect("data.db")
         cursor = connection.cursor()
@@ -77,4 +77,3 @@ class ParkingSpotModel():
         finally:
             connection.close()
         return None
-
